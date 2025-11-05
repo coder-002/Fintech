@@ -1,5 +1,6 @@
 using Fintech.Data;
 using Fintech.Dtos.Stock;
+using Fintech.Interfaces;
 using Fintech.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,15 +12,17 @@ namespace Fintech.Controllers;
 public class StockController : ControllerBase
 {
     private readonly AppDbContext _context;
-    public StockController(AppDbContext context)
+    private readonly IStockRepository _stockRepo;
+    public StockController(AppDbContext context, IStockRepository stockRepo)
     {
+        _stockRepo = stockRepo;
         _context = context;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var stocks = await _context.Stocks.ToListAsync();
+        var stocks = await _stockRepo.GetAllAsync();
         var stockDto = stocks.Select(s => s.ToStockDto());
         return Ok(stocks);
     }
