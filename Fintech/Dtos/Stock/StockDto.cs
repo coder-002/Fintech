@@ -1,3 +1,5 @@
+using Fintech.Dtos.Comment;
+
 namespace Fintech.Dtos.Stock;
 
 public class StockDto
@@ -15,4 +17,5 @@ public class StockDto
     public string Industry { get; set; } = string.Empty;
 
     public long MarketCap { get; set; }
+    public List<CommentDto> Comments { get; set; }
 }

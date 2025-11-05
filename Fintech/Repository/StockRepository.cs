@@ -15,12 +15,12 @@ public class StockRepository: IStockRepository
     }
     public Task<List<Stock>> GetAllAsync()
     {
-        return _context.Stocks.ToListAsync();
+        return _context.Stocks.Include(c=>c.Comments).ToListAsync();
     }
 
     public async Task<Stock?> GetByIdAsync(int id)
     {
-        return await _context.Stocks.FindAsync(id);
+        return await _context.Stocks.Include(c=> c.Comments).FirstOrDefaultAsync(i=> i.Id == id);
     }
 
     public async Task<Stock> CreateAsync(Stock stockModel)
@@ -44,6 +44,7 @@ public class StockRepository: IStockRepository
         existingStock.LastDiv = stockDto.LastDiv;
         existingStock.Purchase = stockDto.Purchase;
         existingStock.MarketCap = stockDto.MarketCap;
+        
         
         await _context.SaveChangesAsync();
         return existingStock;
