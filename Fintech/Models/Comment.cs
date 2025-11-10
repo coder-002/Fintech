@@ -8,7 +8,7 @@ public class Comment
     
     public string Content { get; set; } = string.Empty;
 
-    public DateTime CreatedOn  { get; set; } = DateTime.Now;
+    public DateTime CreatedOn  { get; set; } = DateTime.UtcNow;
     
     public int? StockId { get; set; }
 

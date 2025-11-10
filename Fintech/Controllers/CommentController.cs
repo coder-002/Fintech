@@ -9,21 +9,24 @@ namespace Fintech.Controllers;
 public class CommentController: ControllerBase
 {
     private readonly ICommentRepository _commentRepository;
+    private readonly IStockRepository _stockRepository;
 
-    public CommentController(ICommentRepository commentRepository)
+    public CommentController(ICommentRepository commentRepository, IStockRepository stockRepository)
     {
         _commentRepository = commentRepository;
+        _stockRepository = stockRepository;
     }
 
     [HttpGet]
-    public async Task<ActionResult> GetALl()
+    public async Task<ActionResult> GetAll()
     {
         var comments = await _commentRepository.GetAllAsync();
         var commentDto = comments.Select(s => s.ToCommentDto());
         return Ok(commentDto);
     }
 
-    public async Task<ActionResult> GetByIdAsync([FromRoute] int id)
+    [HttpGet("{id}")]
+    public async Task<ActionResult> GetById([FromRoute] int id)
     {
         var comment = await _commentRepository.GetByIdAsync(id);
 
@@ -33,5 +36,45 @@ public class CommentController: ControllerBase
         }
         return Ok(comment.ToCommentDto());
     }
+
+    [HttpPost("{stockId}")]
+    public async Task<IActionResult> Create([FromRoute] int stockId, CreateCommentDto createCommentDto)
+    {
+        if (!await _stockRepository.StockExists(stockId))
+        {
+            return BadRequest("Stock does not exist");
+        }
+
+        var commentModel = createCommentDto.ToCommentFromCreate(stockId);
+        await _commentRepository.CreateAsync(commentModel);
+        return CreatedAtAction(nameof(GetById), new { id = commentModel.Id }, commentModel.ToCommentDto());
+
+    }
+
+    [HttpPut]
+    [Route("{id}")]
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCommentRequestDto updateCommentDto)
+    {
+        var comment = await _commentRepository.UpdateAsync(id, updateCommentDto.ToCommentFromUpdate());
+        if (comment == null)
+        {
+          return  NotFound("Comment not found");
+        }
+        return Ok(comment.ToCommentDto());
+    }
+
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> Delete([FromRoute] int id)
+    {
+        var commentModel = await _commentRepository.DeleteAsync(id);
+        if (commentModel == null)
+        {
+            return NotFound("Comment not found");
+        }
+
+        return Ok(commentModel);
+    }
+    
    
 }
