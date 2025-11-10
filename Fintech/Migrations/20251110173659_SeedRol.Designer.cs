@@ -3,6 +3,7 @@ using System;
 using Fintech.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Fintech.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251110173659_SeedRol")]
+    partial class SeedRol
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,13 +180,13 @@ namespace Fintech.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "1ecbbbbe-dd37-400d-9b5a-e0e10ac67427",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "2",
+                            Id = "50bf80a7-0da0-45ff-90bb-2a264af4e3bd",
                             Name = "User",
                             NormalizedName = "USER"
                         });
