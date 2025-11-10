@@ -1,9 +1,10 @@
 using Fintech.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fintech.Data;
 
-public class AppDbContext: DbContext
+public class AppDbContext: IdentityDbContext<AppUser>
 {
     public AppDbContext(DbContextOptions options) : base(options)
     {
