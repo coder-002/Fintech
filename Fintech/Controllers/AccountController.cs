@@ -38,15 +38,16 @@ public class AccountController: ControllerBase
         {
             return Unauthorized("Invalid username or password");
         }
+
         return Ok(
             new NewUserDto
             {
                 UserName = user.UserName,
                 Email = user.Email,
                 Token = _tokenService.CreateToken(user)
-                
-            })
-            
+
+            });
+
     }
 
     [HttpPost("register")]
