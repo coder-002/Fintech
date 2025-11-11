@@ -1,6 +1,10 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Fintech.Models;
 
+[Table("Comments")]
 public class Comment
+
 {
     public int Id { get; set; }
     
