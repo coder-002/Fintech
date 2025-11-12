@@ -15,8 +15,13 @@ public class Comment
     public DateTime CreatedOn  { get; set; } = DateTime.UtcNow;
     
     public int? StockId { get; set; }
+    
+    public string AppUserId { get; set; }
+    public AppUser AppUser { get; set; }
 
     //Navigation property
     public Stock? Stock { get; set; }
+    
+
     
 }

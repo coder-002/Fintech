@@ -1,6 +1,9 @@
 using Fintech.Dtos.Comment;
+using Fintech.Extensions;
 using Fintech.Interfaces;
 using Fintech.Mappers;
+using Fintech.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fintech.Controllers;
@@ -10,11 +13,13 @@ public class CommentController: ControllerBase
 {
     private readonly ICommentRepository _commentRepository;
     private readonly IStockRepository _stockRepository;
+    private readonly UserManager<AppUser> _userManager;
 
-    public CommentController(ICommentRepository commentRepository, IStockRepository stockRepository)
+    public CommentController(ICommentRepository commentRepository, IStockRepository stockRepository, UserManager<AppUser> userManager)
     {
         _commentRepository = commentRepository;
         _stockRepository = stockRepository;
+        _userManager = userManager;
     }
 
     [HttpGet]
@@ -45,7 +50,11 @@ public class CommentController: ControllerBase
             return BadRequest("Stock does not exist");
         }
 
+        var username = User.GetUsername();
+        var appUser = await _userManager.FindByNameAsync(username);
+
         var commentModel = createCommentDto.ToCommentFromCreate(stockId);
+        commentModel.AppUserId = appUser.Id;
         await _commentRepository.CreateAsync(commentModel);
         return CreatedAtAction(nameof(GetById), new { id = commentModel.Id }, commentModel.ToCommentDto());
 
